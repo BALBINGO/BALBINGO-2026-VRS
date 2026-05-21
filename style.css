@@ -1,0 +1,245 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #f7ede2, #ffffff);
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+/* STARTSIDANS BAKGRUND */
+.start-bg {
+  background: linear-gradient(180deg, #f7ede2, #ffffff);
+  background-image: url('prom_background.jpg'); /* valfri bild, annars tas den bara bort */
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+/* STARTSIDANS LAYOUT */
+.start-container {
+  background: rgba(255,255,255,0.85);
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 400px;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(212,165,165,0.4);
+  animation: fadeIn 1.2s ease-out;
+}
+
+.start-title {
+  font-size: 40px;
+  color: #d4a5a5;
+  text-shadow: 0 0 10px rgba(212,165,165,0.7);
+  margin-bottom: 10px;
+}
+
+.start-subtitle {
+  font-size: 18px;
+  color: #6a4f4f;
+  margin-bottom: 25px;
+}
+
+.start-button {
+  background: #d4a5a5;
+  color: white;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(212,165,165,0.7);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.start-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(212,165,165,1);
+}
+
+.start-footer {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #8a6f6f;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+  font-size: 32px;
+  color: #d4a5a5;
+  text-shadow: 0 0 6px rgba(212,165,165,0.5);
+  margin-bottom: 5px;
+}
+
+.student-name {
+  font-size: 18px;
+  color: #8a6f6f;
+  margin-top: -5px;
+  margin-bottom: 5px;
+}
+
+.progress {
+  font-size: 15px;
+  color: #6a4f4f;
+  margin-bottom: 15px;
+}
+
+.instructions {
+  background: #ffffffcc;
+  border: 1px solid #e8c4c4;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #6a4f4f;
+  text-align: left;
+}
+
+.top-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+#bingo-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.cell {
+  background: #ffffff;
+  border: 1px solid #e8c4c4;
+  padding: 8px;
+  font-size: 11px;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.2s;
+  border-radius: 6px;
+  min-height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Glitter när en ruta markeras */
+.cell.marked {
+  background: #d4a5a5;
+  color: white;
+  border-color: #b58383;
+  animation: glitter 0.6s ease-out;
+}
+
+@keyframes glitter {
+  0% { box-shadow: 0 0 0 rgba(212,165,165,0.0); }
+  50% { box-shadow: 0 0 15px rgba(212,165,165,0.9); }
+  100% { box-shadow: 0 0 0 rgba(212,165,165,0.0); }
+}
+
+/* Popup */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 85%;
+  max-width: 350px;
+  text-align: left;
+  border: 2px solid #d4a5a5;
+}
+
+.popup-content h2 {
+  margin-top: 0;
+  color: #d4a5a5;
+}
+
+.popup-content input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  border-radius: 6px;
+  border: 1px solid #e8c4c4;
+  font-size: 14px;
+}
+
+button {
+  background: #d4a5a5;
+  border: none;
+  padding: 10px;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+  font-size: 14px;
+}
+
+button#close-popup,
+button#close-submit-popup,
+button#close-superbingo {
+  background: #8a6f6f;
+  margin-top: 6px;
+}
+
+/* 3×3 blockramar */
+.cell:nth-child(3n+1) { border-left: 2px solid #d4a5a5; }
+.cell:nth-child(3n) { border-right: 2px solid #d4a5a5; }
+
+.cell:nth-child(n+1):nth-child(-n+9),
+.cell:nth-child(n+28):nth-child(-n+36),
+.cell:nth-child(n+55):nth-child(-n+63) {
+  border-top: 2px solid #d4a5a5;
+}
+
+.cell:nth-child(n+19):nth-child(-n+27),
+.cell:nth-child(n+46):nth-child(-n+54),
+.cell:nth-child(n+73):nth-child(-n+81) {
+  border-bottom: 2px solid #d4a5a5;
+}
+
+/* Pulse runt minibrickor med bingo */
+.block-bingo {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 10px rgba(212,165,165,0.7) inset; }
+  50% { box-shadow: 0 0 20px rgba(212,165,165,1) inset; }
+  100% { box-shadow: 0 0 10px rgba(212,165,165,0.7) inset; }
+}
+
+/* Glitter-explosion vid SUPERBINGO */
+.superbingo-explosion {
+  animation: explode 1s ease-out;
+}
+
+@keyframes explode {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
