@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BALBINGO 2026 – Bingo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>BALBINGO 2026</h1>
+  <p id="student-name" class="student-name"></p>
+  <p id="progress" class="progress"></p>
+
+  <div class="instructions">
+    <strong>Instruktioner:</strong><br>
+    • Skriv in ditt namn och din klass för att starta din unika bingobricka.<br>
+    • Du har 9 små bingobrickor (3×3) som tillsammans bildar en stor 9×9‑bricka.<br>
+    • Varje 3×3‑ruta är en egen minitävling.<br>
+    • Bingo = en rad, kolumn eller diagonal i en minibricka.<br>
+    • SUPERBINGO = minst en bingo i varje av de 9 minibrickorna.<br>
+    • Först med SUPERBINGO vinner 1:a pris, sedan 2:a och 3:e pris.<br>
+    • Klicka på en ruta för att läsa uppdraget och markera det som klart.
+  </div>
+
+  <div class="top-buttons">
+    <button id="change-name">Byt namn</button>
+    <button id="submit-board">Skicka in min bricka</button>
+  </div>
+
+  <div id="bingo-grid"></div>
+
+  <!-- Namn-popup -->
+  <div id="name-popup" class="popup hidden">
+    <div class="popup-content">
+      <h2>Vem är du?</h2>
+      <p>Skriv ditt namn och din klass (t.ex. "Hampus 9C").</p>
+      <input type="text" id="name-input" placeholder="Namn och klass">
+      <button id="save-name">Starta min bricka</button>
+    </div>
+  </div>
+
+  <!-- Uppdrags-popup -->
+  <div id="task-popup" class="popup hidden">
+    <div class="popup-content">
+      <h2 id="popup-title"></h2>
+      <p id="popup-description"></p>
+      <button id="mark-complete">Markera som klar</button>
+      <button id="close-popup">Stäng</button>
+    </div>
+  </div>
+
+  <!-- Bekräftelse-popup för inskick -->
+  <div id="submit-popup" class="popup hidden">
+    <div class="popup-content">
+      <h2>Bricka inskickad</h2>
+      <p>Din bricka har skickats in. Prata med arrangören om du tror att du har vunnit!</p>
+      <button id="close-submit-popup">Stäng</button>
+    </div>
+  </div>
+
+  <!-- SUPERBINGO-popup -->
+  <div id="superbingo-popup" class="popup hidden">
+    <div class="popup-content">
+      <h2>DU HAR SUPERBINGO!</h2>
+      <p>Gå till arrangören och visa upp din bricka.</p>
+      <button id="close-superbingo">Stäng</button>
+    </div>
+  </div>
+
+  <audio id="superbingo-sound" src="superbingo.mp3"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
