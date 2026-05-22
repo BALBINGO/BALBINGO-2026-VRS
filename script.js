@@ -147,4 +147,206 @@ const tasks = [
   { title: "Läs en låttext som poesi", desc: "Dramatisk uppläsning." },
   { title: "Gör en tyst dansbattle", desc: "Dansduell utan musik." },
   { title: "Gör en frys-dans", desc: "Frys mitt i en pose." },
-  { title: "Säg ett ord baklänges –
+ { title: "Säg ett ord baklänges – låt någon gissa", desc: "Baklängesprat." },
+  { title: "Gör en osynlig skål", desc: "Skåla utan glas." },
+  { title: "Gör en hemlig uppdragshandling", desc: "Som i Förrädarna." },
+  { title: "Gör en spionblick tills någon ler", desc: "Stirra tills de skrattar." },
+  { title: "Först att nudda väggen vinner", desc: "Mini‑race." },
+  { title: "Gör ett ljud – låt någon gissa", desc: "Ljudlek." },
+  { title: "Gör en hemlig pose som återkommer under kvällen", desc: "Din signaturpose." },
+  { title: "Räkna tyst till tre med någon", desc: "Synka tyst." },
+  { title: "Gör en spegelövning", desc: "Härma varandra." },
+  { title: "Gör en mini-improvisation", desc: "3 sekunder spontan teater." },
+  { title: "Kasta en osynlig ballong till någon", desc: "Låtsaslek." },
+  { title: "Gör en hemlig nickning till tre personer", desc: "Diskret nick." },
+  { title: "Ge en tyst applåd åt någon som dansar", desc: "Visa stöd." },
+  { title: "Gör en låtsas-intervju", desc: "Intervjua någon." },
+  { title: "Hitta på ett eget uppdrag", desc: "Var kreativ!" }
+];
+
+const grid = document.getElementById("bingo-grid");
+const namePopup = document.getElementById("name-popup");
+const nameInput = document.getElementById("name-input");
+const saveNameBtn = document.getElementById("save-name");
+const studentNameEl = document.getElementById("student-name");
+const progressEl = document.getElementById("progress");
+
+const taskPopup = document.getElementById("task-popup");
+const popupTitle = document.getElementById("popup-title");
+const popupDesc = document.getElementById("popup-description");
+const markBtn = document.getElementById("mark-complete");
+const closePopupBtn = document.getElementById("close-popup");
+
+const submitBtn = document.getElementById("submit-board");
+const submitPopup = document.getElementById("submit-popup");
+const closeSubmitPopupBtn = document.getElementById("close-submit-popup");
+const changeNameBtn = document.getElementById("change-name");
+
+const superbingoPopup = document.getElementById("superbingo-popup");
+const closeSuperbingoBtn = document.getElementById("close-superbingo");
+const superbingoSound = document.getElementById("superbingo-sound");
+
+let currentIndex = null;
+let saved = [];
+let shuffledTasks = [];
+let studentName = localStorage.getItem("balbingo_name") || "";
+
+// Slumpa array
+function shuffle(array) {
+  let arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Skicka progress till Google Sheet
+function sendProgress(submitted = false) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === "YOUR_APPS_SCRIPT_URL_HERE") return;
+  const completedCount = saved.filter(Boolean).length;
+  const payload = {
+    name: studentName,
+    completed: saved,
+    completedCount,
+    submitted,
+    timestamp: new Date().toISOString()
+  };
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+}
+
+function highlightBlocks() {
+  const blocks = getBlockBingos(saved);
+  const blockStarts = [
+    [0,0],[0,3],[0,6],
+    [3,0],[3,3],[3,6],
+    [6,0],[6,3],[6,6]
+  ];
+
+  document.querySelectorAll(".cell").forEach(c => c.classList.remove("block-bingo"));
+
+  blocks.forEach((hasBingo, i) => {
+    if (!hasBingo) return;
+    const [sr, sc] = blockStarts[i];
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        const index = (sr + r) * 9 + (sc + c);
+        grid.children[index].classList.add("block-bingo");
+      }
+    }
+  });
+}
+
+function updateProgress() {
+  const completedCount = saved.filter(Boolean).length;
+  const blockBingos = getBlockBingos(saved);
+  const blocksDone = blockBingos.filter(Boolean).length;
+  progressEl.textContent =
+    `Progress: ${completedCount}/81 klara — ${blocksDone}/9 minibrickor har bingo`;
+}
+
+// Bygg grid
+function buildGrid() {
+  grid.innerHTML = "";
+  shuffledTasks.forEach((task, index) => {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.textContent = task.title;
+    if (saved[index]) cell.classList.add("marked");
+    cell.addEventListener("click", () => {
+      currentIndex = index;
+      popupTitle.textContent = task.title;
+      popupDesc.textContent = task.desc;
+      taskPopup.classList.remove("hidden");
+    });
+    grid.appendChild(cell);
+  });
+  highlightBlocks();
+  updateProgress();
+}
+
+// Init
+function init() {
+  if (!studentName) {
+    namePopup.classList.remove("hidden");
+  } else {
+    studentNameEl.textContent = studentName;
+  }
+
+  const storedState = localStorage.getItem("balbingo_state");
+  const storedTasks = localStorage.getItem("balbingo_tasks");
+
+  if (storedTasks) {
+    shuffledTasks = JSON.parse(storedTasks);
+  } else {
+    shuffledTasks = shuffle(tasks);
+    localStorage.setItem("balbingo_tasks", JSON.stringify(shuffledTasks));
+  }
+
+  if (storedState) {
+    saved = JSON.parse(storedState);
+  } else {
+    saved = Array(shuffledTasks.length).fill(false);
+    localStorage.setItem("balbingo_state", JSON.stringify(saved));
+  }
+
+  buildGrid();
+}
+
+saveNameBtn.addEventListener("click", () => {
+  const val = nameInput.value.trim();
+  if (!val) return;
+  studentName = val;
+  localStorage.setItem("balbingo_name", studentName);
+  studentNameEl.textContent = studentName;
+  namePopup.classList.add("hidden");
+  sendProgress(false);
+});
+
+changeNameBtn.addEventListener("click", () => {
+  nameInput.value = studentName || "";
+  namePopup.classList.remove("hidden");
+});
+
+markBtn.addEventListener("click", () => {
+  if (currentIndex === null) return;
+  saved[currentIndex] = true;
+  localStorage.setItem("balbingo_state", JSON.stringify(saved));
+  buildGrid();
+  taskPopup.classList.add("hidden");
+  sendProgress(false);
+
+  if (hasSuperbingo(saved)) {
+    if (superbingoSound) superbingoSound.play();
+    const title = document.querySelector("h1");
+    title.classList.add("superbingo-explosion");
+    setTimeout(() => {
+      title.classList.remove("superbingo-explosion");
+    }, 1000);
+    superbingoPopup.classList.remove("hidden");
+  }
+});
+
+closePopupBtn.addEventListener("click", () => {
+  taskPopup.classList.add("hidden");
+});
+
+submitBtn.addEventListener("click", () => {
+  sendProgress(true);
+  submitPopup.classList.remove("hidden");
+});
+
+closeSubmitPopupBtn.addEventListener("click", () => {
+  submitPopup.classList.add("hidden");
+});
+
+closeSuperbingoBtn.addEventListener("click", () => {
+  superbingoPopup.classList.add("hidden");
+});
+
+init();
