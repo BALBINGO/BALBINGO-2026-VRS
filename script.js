@@ -1,5 +1,5 @@
 // === KONFIG ===
-const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE";
+const APPS_SCRIPT_URL = https://script.google.com/macros/s/AKfycbwU2JSzQJ1m2Ksa02z8jmyuLnhwyboumacHJdxSCGdIQ0bgzVjFsFSoI7244znB-O5m8g/exec;
 
 // SUPERBINGO-funktion
 function hasSuperbingo(completed) {
